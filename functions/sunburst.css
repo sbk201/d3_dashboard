@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans+Narrow');
+
+  body {
+    font-family: "PT Sans Narrow", "Arial Narrow", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  #gameboard {
+    height: 400px;
+    width: 400px;
+  }
+
+  path {
+    stroke: #fff;
+  }
+
+  text {
+    pointer-events: none;
+  }
