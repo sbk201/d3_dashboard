@@ -1,18 +1,21 @@
-export const objMap=(obj,fn)=> Object.entries(obj).map(([key,va])=>fn(key,va));
+import {curry} from "lodash";
+import 'es7-object-polyfill';
+export const objMap=(obj,fn)=> Object.entries(obj).map(([key,va])=>fn([key,va]));
 export const objMap2=(obj,fn)=> Object.entries(obj).map(([key,va])=>({[key]:fn([key,va])}));
 
-export const objLoop=(obj,fn)=> Object.entries(obj).reduce((acc,[key,va])=>(Object.assign({},acc,fn(key,va))),{});
+export const objLoop=(obj,fn)=> Object.entries(obj).reduce((acc,[key,va])=>(Object.assign({},acc,fn([key,va]))),{});
 export const objLoop2=(obj,fn)=> Object.entries(obj).reduce((acc,[key,va])=>(Object.assign({},acc,{[key]:fn([key,va])})),{});
 export const sumOfObjectBy=(array,key)=>array.reduce((self,value)=>self+value[key],0)
 
 const toEntries=it=>Array.isArray(it)? it.map(e=>Object.entries(e)[0]) : Object.entries(it);
 export const accum=(target,fn)=> toEntries(target).reduce((self,pair)=>self+fn(pair),0);
 export const map=(target,fn)=> toEntries(target).map(pair=>fn(pair));
-export const statBy=(array,theKey)=>
+export const statBy=curry((theKey,array)=>
   array.map(e=>e[theKey]).reduce((self,key)=>{
-  const times= self[key] ? self[key]+1 : 1;
-  return Object.assign({},self,{[key]:times})
-  },{})
+  const amount= self[key] ? self[key]+1 : 1;
+  // {amount:123,name:"key"}
+  return Object.assign({},self,{[key]:amount})
+  },{}))
 // map(object,([key,va])=>{
   // return (key==='a' || key==='c') && 123
 // })
