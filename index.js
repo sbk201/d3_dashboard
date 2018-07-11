@@ -1,8 +1,17 @@
 // import "./functions/testJson";
 import "./lib";
-import {filterBy} from "./functions/pieChart";
+import {render} from "./functions/pieChart";
 import "./functions/table";
-// import "./functions/sunburst";
+import {draw} from "./functions/histo";
 
-const statusDom=filterBy({selector:"#pieChart1",filterKey:"Status"});
-const areaDom=filterBy({selector:"#pieChart2",filterKey:"Area"});
+const t1=draw();
+document.querySelector('#one').addEventListener('click',function() {
+	// render({selector:"#pieChart1",filterKey:"Status"});	
+	console.log(t1.update());
+});
+document.querySelector('#two').addEventListener('click',function() {
+	// render({selector:"#pieChart1",filterKey:"Area"});
+});
+
+const statusDom=render({selector:"#pieChart1",filterKey:"Status"});
+const areaDom=render({selector:"#pieChart2",filterKey:"Area"});

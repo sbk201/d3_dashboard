@@ -1,5 +1,6 @@
 import {curry} from "lodash";
 import 'es7-object-polyfill';
+import {differenceInDays} from 'date-fns';
 export const objMap=(obj,fn)=> Object.entries(obj).map(([key,va])=>fn([key,va]));
 export const objMap2=(obj,fn)=> Object.entries(obj).map(([key,va])=>({[key]:fn([key,va])}));
 
@@ -20,7 +21,7 @@ export const statBy=curry((theKey,array)=>
   // return (key==='a' || key==='c') && 123
 // })
 
-window.lib={objMap,objMap2,objLoop,objLoop2,sumOfObjectBy,map,accum,statBy,toEntries};
+window.lib={objMap,objMap2,objLoop,objLoop2,sumOfObjectBy,map,accum,statBy,toEntries,differenceInDays};
 
 /*
 Usage:
@@ -60,3 +61,5 @@ var statArray=[
 statBy(statArray,"fruit")
 output : {apple:2,banana:1}
 */
+
+
