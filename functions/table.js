@@ -1,8 +1,10 @@
 // import {d3} from "../index";
 import * as d3 from "d3";
-import data from '../data';
+import data_ from '../data';
+import {omit} from 'lodash';
 import css from "./table.css";
 
+const data=data_.map(arr=>omit(arr,"DateCompleted"));
 let sortAscending = true;
 const table = d3.select('#d3_table').append('table');
 const titles = d3.keys(data[0]);

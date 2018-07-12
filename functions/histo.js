@@ -1,9 +1,7 @@
 import * as d3 from "d3";
-import {
-    statBy,
-    objMap
-} from '../lib';
+import {statBy, objMap } from '../lib';
 import importData from '../data';
+import {flow} from 'lodash';
 // const rawData = [
     // ["AL", 6354],
     // ["AZ", 2187],
@@ -18,34 +16,39 @@ import importData from '../data';
 // ];
 const fineData=(function() {
     const scopeObj = {
-        "1 to 7": 7,
-        "8 to 30": 30,
-        "31 to 60": 60,
-        "61 to 120": 120,
-        "over 120": 999999
+        "1 to 7 days": 7,
+        "8 to 30 days": 30,
+        "31 to 60 days": 60,
+        "61 to 120 days": 120,
+        "over 120 days": 999999
     };
-    const patchSpent = ele => {
+    const patchSpent=arr=>arr.map(ele=>{
         const completed = ele.DateCompleted || (new Date());
         const DateSpent = lib.differenceInDays(completed, ele.Created);
-        return Object.assign({},ele, {DateSpent} );
+        return Object.assign({},ele, {DateSpent} );   
+    })
+    const toDateSpent=arr=> arr.filter(e => e.DateSpent >= 0).map(e => e.DateSpent);
+    const toScopeName=arr=>arr.map(ele=>{
+        const scopeKeys=Object.keys(scopeObj);
+        const scopeValues=Object.values(scopeObj);
+        const getScope = num => {
+            const index = scopeValues.reduce((times, limit) => times + (num > limit), 0);
+            const scope = scopeKeys[index];
+            return scope;
+        }
+        return getScope(ele);
+    })
+    const statSpent=arr=>{
+        const scopeInit = lib.objLoop2(scopeObj, (([key, value]) => 0));
+        return arr.reduce((self, scope) => {
+            const times=self[scope] + 1;
+            return Object.assign({},self,{[scope]: times})
+            } , scopeInit)
     }
-    const scopeKeys=Object.keys(scopeObj);
-    const scopeValues=Object.values(scopeObj);
-    const getScope = num => {
-        const times = scopeValues.reduce((t, limit) => t + (num > limit), 0);
-        const scope = scopeKeys[times];
-        return scope;
-    }
-    const log=e=> (console.log(e),e);
-    const scopeInit = lib.objLoop2(scopeObj, (([key, value]) => 0));
-    const result1=importData.map(patchSpent).filter(e => e.DateSpent >= 0).map(e => e.DateSpent)
-    const result2=result1.reduce((self, spent) => {
-            const scope = getScope(spent);
-            return Object.assign({},self,{[scope]: self[scope] + 1})
-        } , scopeInit)
-    return Object.entries(result2);
+    const result=flow(patchSpent,toDateSpent,toScopeName,statSpent,Object.entries)(importData);
+    return result;
 })();
-export const draw = () => histoGram(fineData);
+export const render = () => histoGram(fineData);
 
 function histoGram(fD) {
     var barColor = 'steelblue';
@@ -56,10 +59,12 @@ function histoGram(fD) {
             b: 30,
             l: 0
         };
-    hGDim.w = 500 - hGDim.l - hGDim.r,
-        hGDim.h = 300 - hGDim.t - hGDim.b;
+    hGDim.w = 0.4*window.innerWidth - hGDim.l - hGDim.r,
+    hGDim.h = 400 - hGDim.t - hGDim.b;
+    // hGDim.w = 500 - hGDim.l - hGDim.r,
+    // hGDim.h = 300 - hGDim.t - hGDim.b;
     //create svg for histogram.
-    var hGsvg = d3.select('#histo').append("svg").attr("width", hGDim.w + hGDim.l + hGDim.r).attr("height", hGDim.h + hGDim.t + hGDim.b).append("g").attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
+    var hGsvg = d3.select('#histo .chart').append("svg").attr("width", hGDim.w + hGDim.l + hGDim.r).attr("height", hGDim.h + hGDim.t + hGDim.b).append("g").attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
     // create function for x-axis mapping.
     var x = d3.scaleBand().rangeRound([0, hGDim.w]).domain(fD.map(function(d) {
         return d[0];

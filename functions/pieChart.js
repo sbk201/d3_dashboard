@@ -18,7 +18,7 @@ export const render=({filterKey,selector,secondFilter})=>{
     thisDom.innerHTML+=title;
 
     const {svg,radius,g}=(function() {
-        const width=0.4*window.innerWidth; 
+        const width=0.35*window.innerWidth; 
         const height=width;
         const radius=Math.min(width, height) / 2
         const svg=d3.select(selector).append("svg").attr("width",width).attr("height",height);
