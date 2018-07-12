@@ -1,11 +1,9 @@
 // import {d3} from "../index";
 import * as d3 from "d3";
-import importData from '../data';
 import "./pieChart.css";
 import {statBy,objMap} from '../lib';
 import {flow} from 'lodash';
-console.log(importData);
-export const render=({filterKey,selector,secondFilter})=>{
+export const render=({filterKey,selector,secondFilter},dataImport)=>{
     const docSel=sel=>document.querySelector(sel);
     const thisDom=docSel(selector);
     thisDom.innerHTML='';
@@ -47,7 +45,7 @@ export const render=({filterKey,selector,secondFilter})=>{
         // const filter2_=docSel('#pieChart2 select').value;
         return array.filter(e=>e.Status===secondFilter)
     };
-    const dataFine=statBy(filterKey,secFilter(importData));
+    const dataFine=statBy(filterKey,secFilter(dataImport));
     const data=objMap(dataFine,([key,amount])=>({name:key,amount}));
     var arcPath= g.selectAll(".arc") .data(pie(data));
     const arc=arcPath.enter().append("g").attr("class", "arc");
@@ -68,7 +66,7 @@ export const render=({filterKey,selector,secondFilter})=>{
             const key= filterKey==='Area' ? `Area ${key_}` : key_
             return `<div>${block(th)} ${key} : ${times}</div>`
             }).join('');
-        const length=secFilter(importData).length;
+        const length=secFilter(dataImport).length;
         const addTotal=dom=>`<div>Total ${length}</div>`+dom;
         const domSelect=dom=>{
             const sel=`Status Filter <select>
@@ -82,7 +80,7 @@ export const render=({filterKey,selector,secondFilter})=>{
             </select><br/>`;
             return filterKey==='Area' ? (sel+dom) : dom;
         }
-        // console.log(importData,data);
+        // console.log(dataImport,data);
         const theDom=flow( Object.entries, toDom,addTotal,domSelect)(dataFine);
         return theDom
     };
@@ -91,7 +89,7 @@ export const render=({filterKey,selector,secondFilter})=>{
     if(filterKey==='Area'){
         const updateChart=e=>{
             const secondFilter=e.target.value;
-            render({filterKey,selector,secondFilter})
+            render({filterKey,selector,secondFilter},dataImport)
             return
         }
         docSel('#pieChart2 select').addEventListener('change',updateChart)

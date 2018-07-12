@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import {statBy, objMap } from '../lib';
-import importData from '../data';
 import {flow} from 'lodash';
 // const rawData = [
     // ["AL", 6354],
@@ -14,7 +13,7 @@ import {flow} from 'lodash';
     // ["IN", 4180],
     // ["KS", 1012]
 // ];
-const fineData=(function() {
+const handleData= dataImport =>{
     const scopeObj = {
         "1 to 7 days": 7,
         "8 to 30 days": 30,
@@ -45,10 +44,9 @@ const fineData=(function() {
             return Object.assign({},self,{[scope]: times})
             } , scopeInit)
     }
-    const result=flow(patchSpent,toDateSpent,toScopeName,statSpent,Object.entries)(importData);
-    return result;
-})();
-export const render = () => histoGram(fineData);
+    return flow(patchSpent,toDateSpent,toScopeName,statSpent,Object.entries)(dataImport);
+};
+export const render = dataImport => histoGram(handleData(dataImport));
 
 function histoGram(fD) {
     var barColor = 'steelblue';
