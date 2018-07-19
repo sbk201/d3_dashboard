@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import {statBy, objMap } from '../lib';
+import {statBy, objMap } from '../lib/helper';
 import {flow} from 'lodash';
 // const rawData = [
     // ["AL", 6354],

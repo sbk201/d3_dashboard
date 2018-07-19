@@ -1,13 +1,14 @@
 // import "./functions/testJson";
-import "./lib";
+import "./lib/helper";
 import {render as pieRender} from "./functions/pieChart";
 import {render as histoRender} from "./functions/histo";
 import renderTable from "./functions/table";
-// import dataImport from './data.js';
 import getIdeas from './api';
-getIdeas(init);
-// init(dataImport);
+import dataImport from './data.js';
+init(dataImport);
+// getIdeas(init);
 function init(dataImport) {
+	// console.log(dataImport);
 	pieRender({selector:"#pieChart1",filterKey:"Status"},dataImport);
 	pieRender({selector:"#pieChart2",filterKey:"Area"},dataImport);
 	histoRender(dataImport);

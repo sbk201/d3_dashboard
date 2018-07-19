@@ -2,8 +2,15 @@ import * as d3 from "d3";
 import data_ from '../data';
 import {omit} from 'lodash';
 import css from "./table.css";
+import {format} from "date-fns";
+import {assignWhere} from '../lib/helper';
 export default function(dataImported) {
-	const data=dataImported.map(arr=>omit(arr,"DateCompleted"));
+	const convertDates=ele=>{
+		const toDate=date=>format(date, 'DD/MM/YYYY');
+		const where=[["Created",toDate],["DateDue",toDate]];
+		return assignWhere(ele,where)
+	};
+	const data=dataImported.map(arr=>omit(arr,"DateCompleted")).map(convertDates);
 	let sortAscending = true;
 	const table = d3.select('#d3_table').append('table');
 	const titles = d3.keys(data[0]);

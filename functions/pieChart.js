@@ -1,7 +1,7 @@
 // import {d3} from "../index";
 import * as d3 from "d3";
 import "./pieChart.css";
-import {statBy,objMap} from '../lib';
+import {statBy,objMap} from '../lib/helper';
 import {flow} from 'lodash';
 export const render=({filterKey,selector,secondFilter},dataImport)=>{
     const docSel=sel=>document.querySelector(sel);
@@ -16,10 +16,11 @@ export const render=({filterKey,selector,secondFilter},dataImport)=>{
     thisDom.innerHTML+=title;
 
     const {svg,radius,g}=(function() {
-        const width=0.35*window.innerWidth; 
+        const width=300; 
+        // const width=0.25*window.innerWidth; 
         const height=width;
         const radius=Math.min(width, height) / 2
-        const svg=d3.select(selector).append("svg").attr("width",width).attr("height",height);
+        const svg=d3.select(selector).append("svg").attr("width",width).attr("height",height).attr("class","chart");
         const g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
         return {svg,radius,g}
     })();
