@@ -16,27 +16,31 @@ export const render=({filterKey,selector,secondFilter},dataImport)=>{
     })();
     thisDom.innerHTML+=title;
 
-    var width = 960,
-    height = 500,
-    radius = Math.min(width, height) / 2;
+    const {svg,radius,g}=(function() {
+        const width=300; 
+        // const width=0.25*window.innerWidth; 
+        const height=width;
+        const radius=Math.min(width, height) / 2
+        const svg=d3.select(selector).append("svg").attr("width",width).attr("height",height).attr("class","chart");
+        const g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+        return {svg,radius,g}
+    })();
+    const colors=["#98abc5", "#8a89a6", "#6fd500", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "000000"];
+    const color = d3.scaleOrdinal(colors);
 
-    const colors=["#98abc5", "#8a89a6", "#82d12d", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "000000"];
-    var color = d3.scaleOrdinal(colors);
-
-    var arc = d3.arc()
-        .outerRadius(radius - 10)
-        .innerRadius(radius - 70);
-
-    var pie = d3.pie()
+    const context= canvas.getContext("2d");
+    const pie = d3.pie()
         .sort(null)
         .value(d=>d.amount);
 
-    var svg = d3.select(selector).append("svg")
-        .attr("width", width)
-        .attr("height", height)
-      .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    const path = d3.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(radius - 60);
 
+    const labelArc = d3.arc()
+        .outerRadius(radius - 40)
+        .innerRadius(radius - 40)
+        .context(context)
 
     const secFilter=array=>{
         if(!secondFilter || secondFilter==='Total') return array;
@@ -47,25 +51,28 @@ export const render=({filterKey,selector,secondFilter},dataImport)=>{
     const dataFine=statBy(filterKey,secFilter(dataImport));
     const data=objMap(dataFine,([key,amount])=>({name:key,amount}));
     
-    
-    var g = svg.selectAll(".arc")
-        .data(pie(data))
-        .enter().append("g")
-        .attr("class", "arc");
-    
-    g.append("path")
-        .attr("d", arc)
-        .style("fill", function(d) { return color(d.data.name); });
-    
-    const showAmount=d=>{
-        const {amount}=d.data;
-        if(amount<10) return ""
-        return amount
-    }
-    g.append("text")
-        .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-        .attr("dy", ".35em")
-        .text(showAmount)
+    var arcPath= g.selectAll(".arc") .data(pie(data));
+    const arc=arcPath.enter().append("g").attr("class", "arc");
+    arcPath.exit().remove();
+
+    // const arc = g.selectAll(".arc")
+    // .data(pie(data))
+    // .enter().append("g")
+    //   .attr("class", "arc");
+
+    arc.append("path")
+      .attr("d", path)
+      .attr("fill",d=>color(d.data.name));
+
+    arc.append("text")
+      .attr("dy", ".35em")
+      .text(d=>1234);
+      // arcPath.enter().append("text")
+      // .attr("class", "arc");
+    // g.append("text")
+      // .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+      // .attr("dy", ".35em")
+      // .text(function(d) { return 1234});
 
     const statDom=(param={})=> {
         const block= th=> `<svg width="16" height="16"><rect width="16" height="16" fill="${colors[th]}"></rect></svg>`;
