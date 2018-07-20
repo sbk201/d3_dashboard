@@ -1,5 +1,5 @@
-.arc text {
-  font: 10px sans-serif;
+.arc text,svg text {
+  font-family: 'Open Sans', sans-serif;
   text-anchor: middle;
 }
 
@@ -7,9 +7,6 @@
   stroke: #fff;
 }
 
-svg.chart {
-	float:left;
-}
 #pieChart1,#pieChart2{
-	width: 500px;
+	width: 700px;
 }
