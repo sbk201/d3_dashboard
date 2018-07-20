@@ -58,7 +58,7 @@ export const render=({filterKey,selector,secondFilter},dataImport)=>{
     const defaultInfo=()=>{
         const background=d3.selectAll(`${selector} .mouseInfo.circle`);
         const title=docSel(`${selector} .mouseInfo.title`);
-        const titleText= (filterKey==='Area' && secondFilter) ? "In "+secondFilter : "Total";
+        const titleText= (filterKey==='Area' && secondFilter) ? secondFilter : "Total";
         const content=docSel(`${selector} .mouseInfo.content`);
         title.innerHTML=titleText;
         const Total=sumOfObjectBy(data,"amount");

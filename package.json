@@ -8,6 +8,7 @@
     "build": "parcel build index.html --no-source-maps --public-url /ecom/WebParts/John_dev/ --out-dir dist/production"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "babel-preset-env": "^1.7.0",
     "d3": "^5.5.0",
     "date-fns": "^1.29.0",

@@ -5,6 +5,8 @@ import {render as histoRender} from "./functions/histo";
 import renderTable from "./functions/table";
 import getIdeas from './api';
 import dataImport from './data.js';
+const axios = require('axios');
+
 init(dataImport);
 // getIdeas(init);
 function init(dataImport) {
@@ -21,3 +23,8 @@ document.querySelector('#one').addEventListener('click',function() {
 document.querySelector('#two').addEventListener('click',function() {
 	// render({selector:"#pieChart1",filterKey:"Area"});
 });
+// https://jsonplaceholder.typicode.com/users
+const link=()=>`https://jsonplaceholder.typicode.com/users/`+~~(Math.random()*10+1)
+const call=()=>axios.get(link()).then(res=>console.log(res.data));
+// setInterval(call,1000)
+window.test=()=> init(dataImport.slice(0,20));

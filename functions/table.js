@@ -5,6 +5,7 @@ import css from "./table.css";
 import {format} from "date-fns";
 import {assignWhere} from '../lib/helper';
 export default function(dataImported) {
+	document.querySelector('#d3_table').innerHTML="";
 	const convertDates=ele=>{
 		const toDate=date=>format(date, 'DD/MM/YYYY');
 		const where=[["Created",toDate],["DateDue",toDate]];

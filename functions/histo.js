@@ -1,18 +1,6 @@
 import * as d3 from "d3";
 import {statBy, objMap } from '../lib/helper';
 import {flow} from 'lodash';
-// const rawData = [
-    // ["AL", 6354],
-    // ["AZ", 2187],
-    // ["CT", 3499],
-    // ["DE", 3846],
-    // ["FL", 8733],
-    // ["GA", 2849],
-    // ["IA", 3269],
-    // ["IL", 9292],
-    // ["IN", 4180],
-    // ["KS", 1012]
-// ];
 const handleData= dataImport =>{
     const scopeObj = {
         "1 to 7 days": 7,
@@ -24,7 +12,7 @@ const handleData= dataImport =>{
     const patchSpent=arr=>arr.map(ele=>{
         const completed = ele.DateCompleted || (new Date());
         const DateSpent = lib.differenceInDays(completed, ele.Created);
-        return Object.assign({},ele, {DateSpent} );   
+        return Object.assign({},ele, {DateSpent} );
     })
     const toDateSpent=arr=> arr.filter(e => e.DateSpent >= 0).map(e => e.DateSpent);
     const toScopeName=arr=>arr.map(ele=>{
@@ -46,7 +34,10 @@ const handleData= dataImport =>{
     }
     return flow(patchSpent,toDateSpent,toScopeName,statSpent,Object.entries)(dataImport);
 };
-export const render = dataImport => histoGram(handleData(dataImport));
+export const render = dataImport => {
+    document.querySelector('#histo .chart').innerHTML="";
+    histoGram(handleData(dataImport));
+}
 
 function histoGram(fD) {
     var barColor = 'steelblue';
