@@ -9,22 +9,22 @@ import lastTimer from './functions/lastTimer';
 
 const axios = require('axios');
 
-const isDev=location.href.includes('localhost');
-isDev ? init(dataImport) : getIdeas(init);
+(function (){
+	const isDev=location.href.includes('localhost');
+	const apiCall= ()=>isDev ? init(dataImport) : getIdeas(init);
+	apiCall();
+	window.apiCall=apiCall;
+	setInterval(apiCall,1000*60*60*24);
+})();
 function init(dataImport) {
 	lastTimer(new Date());
-	window.testTime=(time)=>lastTimer(time);
-	// console.log('run');
-	// const now=format(new Date(),'DD/MM/YYYY');
-	// console.log(dataImport);
-	// document.querySelectorAll('.updateTime').forEach(node=>node.innerHTML=`Last Updated: ${now}`);
+	// window.testTime=(time)=>lastTimer(time);
 	pieRender({selector:"#pieChart1",filterKey:"Status"},dataImport);
 	pieRender({selector:"#pieChart2",filterKey:"Area"},dataImport);
 	histoRender(dataImport);
 	renderTable(dataImport);
 }
 // https://jsonplaceholder.typicode.com/users
-const link=()=>`https://jsonplaceholder.typicode.com/users/`+~~(Math.random()*10+1)
-const call=()=>axios.get(link()).then(res=>console.log(res.data));
-// setInterval(call,1000)
-window.test=()=> init(dataImport.slice(0,20));
+// const link=()=>`https://jsonplaceholder.typicode.com/users/`+~~(Math.random()*10+1)
+// const call=()=>axios.get(link()).then(res=>console.log(res.data));
+// window.test=()=> init(dataImport.slice(0,20));

@@ -6,11 +6,10 @@ export default function init(_lastTime) {
 	lastTime=_lastTime;
 	update(lastTime,new Date());
 }
-var switchValue=([val,...vals])=>
+const switchValue=([val,...vals])=>
 	val || (vals.length && switchValue(vals)) || null;
-	// console.log(timer)
-	// if (timer) clearInterval(myVar);
 const update=(last,now)=>{
+	if(last!==lastTime) return console.log('ended');
 	const diff=differenceInSeconds(now,last);
 	const diffMin= ~~(diff/60);
 	const diffHour= ~~(diff/3600);
@@ -21,10 +20,8 @@ const update=(last,now)=>{
 		diff<3600*2 && `an hour`,
 		`${diffHour}hours`,
 		])
-	console.log(diff);
 	document.querySelector('.updateTime').innerHTML=`Data Updated ${diffTime} ago`;
-	if(last!==lastTime) return console.log('ended');
 	setTimeout(function(){
 		update(last,new Date());
-	},1000)
+	},1000*10)
 }

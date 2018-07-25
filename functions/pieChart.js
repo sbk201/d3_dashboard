@@ -63,6 +63,10 @@ export const render=({filterKey,selector,secondFilter},dataImport)=>{
         title.innerHTML=titleText;
         const Total=sumOfObjectBy(data,"amount");
         content.innerHTML= `${Total} (100%)`;
+
+        var linearGradient = background.append("defs")
+            .append("linearGradient")
+            .attr("id", "linear-gradient");
         background.transition()
         .duration(500)
         .attr("fill","#BBBBBB")
