@@ -94,7 +94,6 @@ export const render=({filterKey,selector,secondFilter},dataImport)=>{
             </select><br/>`;
             return filterKey==='Area' ? (sel+dom) : dom;
         }
-        // console.log(dataImport,data);
         const theDom=flow( Object.entries, toDom,addTotal,domSelect)(dataFine);
         return theDom
     };

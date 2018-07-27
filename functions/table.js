@@ -1,6 +1,5 @@
 import * as d3 from "d3";
-import data_ from '../data';
-import {omit} from 'lodash';
+import {omit,flow} from 'lodash';
 import css from "./table.css";
 import {format} from "date-fns";
 import {assignWhere} from '../lib/helper';
@@ -13,27 +12,41 @@ export default function(dataImported) {
 	};
 	rawData=dataImported;
 	const data=dataImported.map(arr=>omit(arr,"DateCompleted")).map(convertDates);
-	drawData(data);
+	const config= {entry:20,page:1};
+	initPagination(data,config);
+	onPage(data);
+	window.data=data;
 };
-// const listener=(function (){
-
-// })();
-// (function pagination(){
-			
-// })();
-// const before= document.querySelector('#tableContainer .before');
-// const pageDom=Array(5).fill().map((ele,i)=>`<button style="width:2em;"> ${i+1} </button>`).join('');
-
-// before.innerHTML=pageDom;
-// console.log(before);
-// before.querySelectorAll('button').addEventListener('click',console.log)
-
-// const prepare=(data,config={})=>{
-// 	const {entry=20,page=1}=config;
-	
-	
-// 	drawData(data);
-// }
+const initPagination=(data,{entry})=>{
+	const before= document.querySelector('#tableContainer .before');
+	const after= document.querySelector('#tableContainer .after');
+	const add= ()=>{
+		before.addEventListener('click',e=>clickedPage(e,data))
+		after.addEventListener('click',e=>clickedPage(e,data))
+	};
+	// const remove= ()=>before.removeEventListener('click',clickedPage)
+	const pages= Math.ceil(data.length/entry);
+	before.style=after.style=`padding: 1em 0;`;
+	const style=`width:2em;`
+	const pageDom=Array(pages).fill().map((ele,i)=>`<span class="button"> ${i+1} </span>`).join('');
+	const addDom=()=>{
+		before.innerHTML=pageDom;
+		after.innerHTML=pageDom;
+	}
+	const init=flow(addDom,add)();
+	return init;
+};
+const clickedPage=({target},data)=>{
+	if(target.className!=="button") return
+	const page= target.innerHTML;
+	onPage(data,{page})
+}
+const onPage=(data,config={})=>{
+	const {entry=20,page=1}=config;
+	const begin=entry*(page-1);
+	const dataFinal=data.slice(begin,entry*page);
+	drawData(dataFinal);
+}
 export const drawData = data=> {
 	document.querySelector('#tableContainer .table').innerHTML="";
 	let sortAscending = true;

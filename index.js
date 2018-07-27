@@ -27,4 +27,4 @@ function init(dataImport) {
 // https://jsonplaceholder.typicode.com/users
 // const link=()=>`https://jsonplaceholder.typicode.com/users/`+~~(Math.random()*10+1)
 // const call=()=>axios.get(link()).then(res=>console.log(res.data));
-// window.test=()=> init(dataImport.slice(0,20));
+window.test=num=> init(dataImport.slice(0,num));

@@ -53,7 +53,6 @@ export const render=({filterKey,selector,secondFilter},dataImport)=>{
         const data= flow(statKey,addColor)(dataFine);
         return {data,dataFine}
     })();
-    console.log(filterKey,data);
 
     const defaultInfo=()=>{
         const background=d3.selectAll(`${selector} .mouseInfo.circle`);
